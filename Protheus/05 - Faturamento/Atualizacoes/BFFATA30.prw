@@ -330,6 +330,7 @@ Static Function sfExec(lAuto,cInPed,nInPedOrc,cInFlgRetAlc,cInIdUser,cInMotAlcad
 	cCampo33 	:= "D2_QUANT"
 	cCampo34 	:= "D2_PRCVEN"
 	cCampo35 	:= "D2_EMISSAO"
+	cCampo36 	:= "C5_CONDPGTO"
 
 	// 1
 	Aadd(aHeadPed		,{"Ok"					,"OK"		   		,"@BMP"     		,1					,0					,""					,				,"C"			,""				,""})
@@ -557,6 +558,9 @@ Static Function sfExec(lAuto,cInPed,nInPedOrc,cInFlgRetAlc,cInIdUser,cInMotAlcad
 	//DbSeek("D2_EMISSAO")
 	Aadd(aHeadPed		,{"Ult.Data",GetSx3Cache(cCampo35,"X3_CAMPO"),GetSx3Cache(cCampo35,"X3_PICTURE"),GetSx3Cache(cCampo35,"X3_TAMANHO"),GetSx3Cache(cCampo35,"X3_DECIMAL")	,""/*SX3->X3_VALID*/,,GetSx3Cache(cCampo35,"X3_TIPO"),GetSx3Cache(cCampo35,"X3_F3"),""})
 	Private nPxUDat	:= ++nSeqC
+	//18 39
+	Aadd(aHeadPed , {"Ult.Condpgto",getSx3Cache(cCampo36,"X3_CAMPO"),GetSx3Cache(cCampo35,"X3_PICTURE"),GetSx3Cache(cCampo36,"X3_TAMANHO"),GetSx3Cache(cCampo36,"X3_DECIMAL") ,""/*SX3->X3_VALID*/,,GetSx3Cache(cCampo36,"X3_TIPO"),GetSx3Cache(cCampo36,"X3_F3"),""})
+	Private nPxUCondPgto := ++nSeqC
 
 	//	Aadd(aAlter,"D1_COD")
 	// Monto um vetor padrão para o Acols permitindo uma dinamica nas colunas
@@ -2743,6 +2747,7 @@ Static Function stRefrItens()
 			// IAGO 26/10/2016 Chamado(16138)
 			cQryU := "SELECT D2.D2_QUANT   AS ULTQTD,"
 			cQryU += "       D2.D2_PRCVEN  AS ULTPRCVEN,"
+			cQryU += "       D2.D2_PRCVEN  AS ULTCONDPGTO,"
 			cQryU += "       D2.D2_EMISSAO AS ULTEMISSAO"
 			cQryU += "  FROM "+RetSqlName("SD2")+ " D2"
 			cQryU += " WHERE D2.R_E_C_N_O_ = (SELECT MAX(D22.R_E_C_N_O_)"
@@ -2847,6 +2852,7 @@ Static Function stRefrItens()
 					oMulti:aCols[nLinAdd,nPxUQtd]		:= QRYU->ULTQTD				//	36
 					oMulti:aCols[nLinAdd,nPxUPrc]		:= QRYU->ULTPRCVEN			//	37
 					oMulti:aCols[nLinAdd,nPxUDat]		:= StoD(QRYU->ULTEMISSAO)	//	38
+					oMulti:aCols[nLinAdd,nPxUCondPgto]	:= QRYU->ULTCONDPGTO			//	37
 
 
 					oMulti:Refresh()
@@ -2883,6 +2889,7 @@ Static Function stRefrItens()
 					oMulti:aCols[nLinAdd,nPxUQtd]		:= QRYU->ULTQTD				//	15
 					oMulti:aCols[nLinAdd,nPxUPrc]		:= QRYU->ULTPRCVEN			//	16
 					oMulti:aCols[nLinAdd,nPxUDat]		:= StoD(QRYU->ULTEMISSAO)	//	17
+					oMulti:aCols[nLinAdd,nPxUConPgto]		:= QRYU->ULTCONDPGTO			//	18
 					oMulti:Refresh()
 				Endif
 			Endif
@@ -3108,6 +3115,7 @@ Static Function stRefrItens()
 			// IAGO 26/10/2016 Chamado(16138)
 			cQryU := "SELECT D2.D2_QUANT   AS ULTQTD,"
 			cQryU += "       D2.D2_PRCVEN  AS ULTPRCVEN,"
+			cQryU += "       D2.D2_PRCVEN  AS ULTCONDPGTO,"
 			cQryU += "       D2.D2_EMISSAO AS ULTEMISSAO"
 			cQryU += "  FROM "+RetSqlName("SD2")+ " D2"
 			cQryU += " WHERE D2.R_E_C_N_O_ = (SELECT MAX(D22.R_E_C_N_O_)"
@@ -3198,6 +3206,7 @@ Static Function stRefrItens()
 				oMulti:aCols[nLinAdd,nPxUQtd]		:= QRYU->ULTQTD				//	36
 				oMulti:aCols[nLinAdd,nPxUPrc]		:= QRYU->ULTPRCVEN			//	37
 				oMulti:aCols[nLinAdd,nPxUDat]		:= StoD(QRYU->ULTEMISSAO)	//	38
+				oMulti:aCols[nLinAdd,nPxUCondPgto]		:= QRYU->ULTCONDPGTO		//	39
 
 				oMulti:Refresh()
 
@@ -3219,9 +3228,10 @@ Static Function stRefrItens()
 				oMulti:aCols[nLinAdd,nPxPeso]		:= QSC6->UB_QUANT*QSC6->B1_PESO	//	30 D2_PESO
 
 				// IAGO 26/10/2016 Chamado(16138)
-				oMulti:aCols[nLinAdd,nPxUQtd]		:= QRYU->ULTQTD				//	15
+				oMulti:aCols[nLinAdd,nPxUQtd]		:= QRYU->ULTQTD				//	15				
 				oMulti:aCols[nLinAdd,nPxUPrc]		:= QRYU->ULTPRCVEN			//	16
 				oMulti:aCols[nLinAdd,nPxUDat]		:= StoD(QRYU->ULTEMISSAO)	//	17
+				oMulti:aCols[nLinAdd,nPxUCondPgto]		:= QRYU->ULTCONDPGTO			//	18
 
 
 				oMulti:Refresh()
@@ -4667,7 +4677,7 @@ Static Function sfSendWF(lInIsAuto,cFlgRetAlc,cInIdUser,cInMotAlcada,cInRecebe)
 		oProcess:oHTML:ValByName("C5_VEND1"		,Iif(MV_PAR07==1,SC5->C5_VEND1 + "-" + Posicione("SA3",1,xFilial("SA3")+SC5->C5_VEND1,"A3_NREDUZ"),SUA->UA_VEND + "-" + Posicione("SA3",1,xFilial("SA3")+SUA->UA_VEND,"A3_NREDUZ"))	)
 		oProcess:oHTML:ValByName("C5_VEND2"		,Iif(MV_PAR07==1,SC5->C5_VEND2 + "-" + Posicione("SA3",1,xFilial("SA3")+SC5->C5_VEND2,"A3_NREDUZ"),"")	)
 		oProcess:oHTML:ValByName("PAB_PRAZO"	,aDadEntrega[4]+" - " + aDadEntrega[3]+" - " + aDadEntrega[1]		)
-		oProcess:oHTML:ValByName("C5_CONDPAG"	,cCondPag	)
+		oProcess:oHTML:ValByName("C5_CONDPGTO"	,cCondPgto	)
 		oProcess:oHTML:ValByName("A1_GERAT"		,cBlqCom	)
 
 		oProcess:oHTML:ValByName("C5_USUPED"	,Iif(MV_PAR07==1,SC5->C5_USUPED,SUA->UA_USUATEN)	)
@@ -4735,6 +4745,7 @@ Static Function sfSendWF(lInIsAuto,cFlgRetAlc,cInIdUser,cInMotAlcada,cInRecebe)
 				AAdd((oProcess:oHtml:ValByName("it.sts"))		,oMulti:aCols[iQ,nPxStatus])
 				//IAGO 25/10/2016 Chamado(16138)
 				AAdd((oProcess:oHtml:ValByName("it.uqtd"))		,oMulti:aCols[iQ,nPxUQtd])
+				AAdd((oProcess:oHtml:ValByName("it.ucondpgto"))	,oMulti:aCols[iQ,nPxUCondPgto])
 				AAdd((oProcess:oHtml:ValByName("it.uprc"))		,Transform(oMulti:aCols[iQ,nPxUPrc],oMulti:aHeader[nPxUPrc,3]))
 				AAdd((oProcess:oHtml:ValByName("it.udat"))		,oMulti:aCols[iQ,nPxUDat])
 
